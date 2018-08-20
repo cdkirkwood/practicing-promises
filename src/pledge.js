@@ -27,6 +27,7 @@ $Promise.prototype._internalReject = function (err) {
   if (this._state === 'pending') {
     this._state = 'rejected'
     this._value = err
+    this.callHandlers()
   }
 }
 
@@ -37,13 +38,24 @@ $Promise.prototype.then = function (successCb, errorCb) {
   if (typeof errorCb === 'function') handlerObj.errorCb = errorCb
   if (typeof errorCb !== 'function') handlerObj.errorCb = false
   this._handlerGroups.push(handlerObj)
-  if (this._state === 'fulfilled') this.callHandlers()
+  if (this._state === 'fulfilled' || this._state === 'rejected') {
+    this.callHandlers()
+  }
 }
 
 $Promise.prototype.callHandlers = function() {
   while (this._handlerGroups.length) {
     const firstHandler = this._handlerGroups[0]
-    if (firstHandler.successCb) firstHandler.successCb(this._value)
+    if (firstHandler.successCb && this._state === 'fulfilled') {
+      firstHandler.successCb(this._value)
+    }
+    if (firstHandler.errorCb && this._state === 'rejected') {
+      firstHandler.errorCb(this._value)
+    }
     this._handlerGroups.shift()
   }
+}
+
+$Promise.prototype.catch = function(callback) {
+  return this.then(null, callback)
 }
