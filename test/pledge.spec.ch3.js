@@ -62,7 +62,7 @@ describe('Another promise', function(){
     // those `handlerGroups`? There is going to have to be some
     // sort of "safety check" somewhere…
 
-    it('does not call any success handlers', function(){
+    xit('does not call any success handlers', function(){
       promiseForThing.then( logOops );
       expect( logOops ).not.toHaveBeenCalled();
     });

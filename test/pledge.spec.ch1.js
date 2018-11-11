@@ -56,7 +56,7 @@ describe('The `$Promise` class', function(){
 
   // This type check mimics the strictness of real ES6 Promises.
 
-  it('throws a descriptive type error if called with no function argument', function(){
+  xit('throws a descriptive type error if called with no function argument', function(){
     var nonFunctions = [null, 'bonjour', undefined, 452, {}, false];
     nonFunctions.forEach(function (nonFunction) {
       expect(callingNewPromiseWith(nonFunction)).toThrowError(
